@@ -1,0 +1,4 @@
+DROP TABLE IF EXISTS resources;
+DROP TABLE IF EXISTS locations;
+DROP TABLE IF EXISTS workgroups;
+DROP TABLE IF EXISTS job_titles;

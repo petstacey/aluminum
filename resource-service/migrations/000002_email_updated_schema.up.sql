@@ -1,0 +1,15 @@
+TRUNCATE TABLE resources;
+
+ALTER TABLE resources 
+ADD COLUMN email TEXT UNIQUE NOT NULL,
+ADD COLUMN type_id INTEGER NOT NULL,
+ADD COLUMN active BOOL DEFAULT 't';
+
+CREATE TABLE IF NOT EXISTS employment_types (
+    id BIGSERIAL PRIMARY KEY,
+    type TEXT NOT NULL UNIQUE
+);
+
+ALTER TABLE resources
+ADD CONSTRAINT fk_employment_type FOREIGN KEY (type_id) REFERENCES employment_types(id);
+

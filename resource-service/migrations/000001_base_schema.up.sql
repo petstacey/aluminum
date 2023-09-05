@@ -1,0 +1,27 @@
+CREATE EXTENSION IF NOT EXISTS citext;
+
+CREATE TABLE IF NOT EXISTS workgroups (
+    id BIGSERIAL PRIMARY KEY,
+    name TEXT NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS job_titles (
+    id BIGSERIAL PRIMARY KEY,
+    title TEXT NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS locations (
+    id BIGSERIAL PRIMARY KEY,
+    name TEXT NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS resources (
+    id INTEGER NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL,
+    job_title_id INTEGER NOT NULL,
+    workgroup_id INTEGER NOT NULL,
+    location_id INTEGER NOT NULL,
+    manager_id INTEGER
+);
+
+ALTER TABLE resources ADD CONSTRAINT fk_resources_manager FOREIGN KEY (manager_id) REFERENCES resources (id);
