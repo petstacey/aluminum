@@ -3,3 +3,6 @@ build:
 
 run: build
 	./bin/svc
+
+clean:
+	rm -rf ./bin
