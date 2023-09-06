@@ -21,7 +21,7 @@ const (
 func main() {
 	db := connectToDB()
 	repo := data.NewPostgresRepository(db)
-	svc := NewService(repo)
+	svc := NewResourceService(repo)
 	svc = NewLoggingService(svc)
 	api := NewApiServer(svc)
 	rtr := iter.New()

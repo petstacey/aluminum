@@ -38,7 +38,7 @@ func (s *LoggingService) GetResources(name string, titles, types, workgroups, lo
 // updateResource implements Service.
 func (s *LoggingService) UpdateResource(resource *data.Resource) (err error) {
 	defer func(start time.Time) {
-		fmt.Printf("update resources: %v, err: %s, took: %v\n", resource, err.Error(), time.Since(start))
+		fmt.Printf("update resources: %v, err: %s, took: %v\n", resource, err, time.Since(start))
 	}(time.Now())
 	return s.next.UpdateResource(resource)
 }

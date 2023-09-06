@@ -10,22 +10,15 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/julienschmidt/httprouter"
+	"github.com/petstacey/iter"
 	"github.com/petstacey/validator"
 )
 
 type envelope map[string]any
 
-type JSONResponse struct {
-	Error   bool   `json:"error,omitempty"`
-	Message string `json:"message"`
-	Data    any    `json:"data,omitempty"`
-}
-
 func (a *ApiServer) readIDParam(r *http.Request) (int64, error) {
-	params := httprouter.ParamsFromContext(r.Context())
-
-	id, err := strconv.ParseInt(params.ByName("id"), 10, 64)
+	param := iter.Param(r.Context(), "id")
+	id, err := strconv.ParseInt(param, 10, 64)
 	if err != nil || id < 1 {
 		return 0, errors.New("invalid id parameter")
 	}
@@ -125,15 +118,11 @@ func (a *ApiServer) errorJSON(w http.ResponseWriter, err error, status ...int) e
 	if len(status) > 0 {
 		statusCode = status[0]
 	}
-	var payload JSONResponse
-	payload.Error = true
-	payload.Message = err.Error()
-	return a.writeJSON(w, statusCode, payload)
+	return a.writeJSON(w, statusCode, envelope{"error": err.Error()})
 }
 
 func (a *ApiServer) errorResponse(w http.ResponseWriter, r *http.Request, status int, message any) {
-	env := envelope{"error": message}
-	err := a.writeJSON(w, status, env, nil)
+	err := a.writeJSON(w, status, envelope{"error": message}, nil)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 	}

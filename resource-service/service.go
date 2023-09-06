@@ -13,7 +13,7 @@ type ResourceService struct {
 	repo Service
 }
 
-func NewService(repo Service) Service {
+func NewResourceService(repo Service) Service {
 	return &ResourceService{
 		repo: repo,
 	}

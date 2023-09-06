@@ -29,7 +29,7 @@ insert into job_titles (title) values ('Associate Consultant I');
 
 insert into employment_types (type) values ('Full time');
 insert into employment_types (type) values ('Contractor');
-insert into employment_types (type) values ('Sub-Contractor');
+insert into employment_types (type) values ('Sub-contractor');
 
 insert into resources (id, name, email, job_title_id, workgroup_id, location_id, type_id, manager_id)
 values (123456, 'Jane Doe', 'jane@doe.com',
