@@ -84,6 +84,8 @@ github.com/mattn/go-colorable v0.1.6/go.mod h1:u6P/XSegPjTcexA+o6vUJrdnUu04hMope
 github.com/mattn/go-isatty v0.0.5/go.mod h1:Iq45c/XA43vh69/j3iqttzPXn0bhXyGjM0Hdxcsrc5s=
 github.com/mattn/go-isatty v0.0.7/go.mod h1:Iq45c/XA43vh69/j3iqttzPXn0bhXyGjM0Hdxcsrc5s=
 github.com/mattn/go-isatty v0.0.12/go.mod h1:cbi8OIDigv2wuxKPP5vlRcQ1OAZbq2CE4Kysco4FUpU=
+github.com/petstacey/iter v0.0.0-20230731012414-7dfe4ae677f8 h1:aM1Vgql14OOdODT2/hKZDJnFEwbNyRc0i9dchN8wINQ=
+github.com/petstacey/iter v0.0.0-20230731012414-7dfe4ae677f8/go.mod h1:humAGTNDWNxHVCp7d/bxYVuH60OK+Z8SkjDszejA3mM=
 github.com/petstacey/validator v0.0.0-20230809212702-0cc80cc0a4ce h1:DnjwTcEqqAZRQDuUe6O5UtGUYVTzoGCSuqFr3QL1l7I=
 github.com/petstacey/validator v0.0.0-20230809212702-0cc80cc0a4ce/go.mod h1:NO13zSK/bpRSomlEqvLJ7xo5/OgX9oKZ+0z6kqZNmYA=
 github.com/pkg/errors v0.8.1 h1:iURUrRGxPUNPdy5/HRSm+Yj6okJ6UtLINN0Q9M4+h3I=

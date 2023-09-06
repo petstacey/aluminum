@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/julienschmidt/httprouter"
 	"github.com/petstacey/aluminum/resource-service/data"
+	"github.com/petstacey/iter"
 
 	_ "github.com/jackc/pgconn"
 	_ "github.com/jackc/pgx/v4"
@@ -24,11 +24,11 @@ func main() {
 	svc := NewService(repo)
 	svc = NewLoggingService(svc)
 	api := NewApiServer(svc)
-	rtr := httprouter.New()
-	rtr.HandlerFunc(http.MethodPost, "/v1/resources", api.handleCreateResource())
-	rtr.HandlerFunc(http.MethodGet, "/v1/resources", api.handleGetResources())
-	rtr.HandlerFunc(http.MethodPut, "/v1/resources", api.handleUpdateResource())
-	rtr.HandlerFunc(http.MethodGet, "/v1/resources/:id", api.handleGetResource())
+	rtr := iter.New()
+	rtr.HandlerFunc("/v1/resources", api.handleCreateResource(), http.MethodPost)
+	rtr.HandlerFunc("/v1/resources", api.handleGetResources(), http.MethodGet)
+	rtr.HandlerFunc("/v1/resources", api.handleUpdateResource(), http.MethodPut)
+	rtr.HandlerFunc("/v1/resources/:id", api.handleGetResource(), http.MethodGet)
 	http.ListenAndServe(":6543", rtr)
 }
 
@@ -55,7 +55,7 @@ func connectToDB() *sql.DB {
 			return conn
 		}
 		if counts > 10 {
-			fmt.Println("Count not connect to database")
+			fmt.Println("Retry limit reached and not connected to database")
 			return nil
 		}
 		fmt.Println("Backing off and waiting for 2 seconds...")
