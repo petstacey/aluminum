@@ -3,6 +3,7 @@ package data
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 	"time"
 
@@ -159,5 +160,14 @@ func (r *PostgresRepository) UpdateResource(resource *Resource) error {
 		resource.Active,
 		resource.ID,
 	}
-	return r.DB.QueryRowContext(ctx, query, args...).Scan()
+	err := r.DB.QueryRowContext(ctx, query, args...).Scan()
+	if err != nil {
+		switch {
+		case errors.Is(err, sql.ErrNoRows):
+			return nil
+		default:
+			return err
+		}
+	}
+	return nil
 }
