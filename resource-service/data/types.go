@@ -1,4 +1,4 @@
-package main
+package data
 
 type JobTitle struct {
 	ID    int64  `json:"jobTitleId"`

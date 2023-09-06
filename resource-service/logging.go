@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"time"
+
+	"github.com/petstacey/aluminum/resource-service/data"
 )
 
 type LoggingService struct {
@@ -10,35 +12,35 @@ type LoggingService struct {
 }
 
 // createResource implements Service.
-func (s *LoggingService) createResource(resource *Resource) (err error) {
+func (s *LoggingService) CreateResource(resource *data.Resource) (err error) {
 	defer func(start time.Time) {
 		fmt.Printf("create resource: %v, err: %v, took: %v\n", resource, err, time.Since(start))
 	}(time.Now())
-	return s.next.createResource(resource)
+	return s.next.CreateResource(resource)
 }
 
 // getResource implements Service.
-func (s *LoggingService) getResource(id int64) (res *Resource, err error) {
+func (s *LoggingService) GetResource(id int64) (res *data.Resource, err error) {
 	defer func(start time.Time) {
 		fmt.Printf("get resource with id: %v, err: %v, took: %v\n", id, err, time.Since(start))
 	}(time.Now())
-	return s.next.getResource(id)
+	return s.next.GetResource(id)
 }
 
 // getResources implements Service.
-func (s *LoggingService) getResources(name string, titles, types, workgroups, locations, managers []string, filters Filters) (res []*Resource, metadata Metadata, err error) {
+func (s *LoggingService) GetResources(name string, titles, types, workgroups, locations, managers []string, filters data.Filters) (res []*data.Resource, metadata data.Metadata, err error) {
 	defer func(start time.Time) {
 		fmt.Printf("get resources: %v, err: %v, took: %v\n", res, err, time.Since(start))
 	}(time.Now())
-	return s.next.getResources(name, titles, types, workgroups, locations, managers, filters)
+	return s.next.GetResources(name, titles, types, workgroups, locations, managers, filters)
 }
 
 // updateResource implements Service.
-func (s *LoggingService) updateResource(resource *Resource) (err error) {
+func (s *LoggingService) UpdateResource(resource *data.Resource) (err error) {
 	defer func(start time.Time) {
 		fmt.Printf("update resources: %v, err: %s, took: %v\n", resource, err.Error(), time.Since(start))
 	}(time.Now())
-	return s.next.updateResource(resource)
+	return s.next.UpdateResource(resource)
 }
 
 func NewLoggingService(next Service) Service {

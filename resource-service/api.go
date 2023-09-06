@@ -1,6 +1,11 @@
 package main
 
-import "net/http"
+import (
+	"net/http"
+
+	"github.com/petstacey/aluminum/resource-service/data"
+	"github.com/petstacey/validator"
+)
 
 type ApiServer struct {
 	svc Service
@@ -14,13 +19,13 @@ func NewApiServer(svc Service) *ApiServer {
 
 func (s *ApiServer) handleCreateResource() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var resource Resource
+		var resource data.Resource
 		err := s.readJSON(w, r, &resource)
 		if err != nil {
 			s.errorJSON(w, err, http.StatusBadRequest)
 			return
 		}
-		err = s.svc.createResource(&resource)
+		err = s.svc.CreateResource(&resource)
 		if err != nil {
 			s.errorJSON(w, err, http.StatusInternalServerError)
 			return
@@ -36,7 +41,7 @@ func (s *ApiServer) handleGetResource() http.HandlerFunc {
 			s.errorJSON(w, err, http.StatusBadRequest)
 			return
 		}
-		resource, err := s.svc.getResource(id)
+		resource, err := s.svc.GetResource(id)
 		if err != nil {
 			s.errorJSON(w, err, http.StatusInternalServerError)
 			return
@@ -53,11 +58,11 @@ func (s *ApiServer) handleGetResources() http.HandlerFunc {
 		Workgroups []string
 		Locations  []string
 		Managers   []string
-		Filters
+		data.Filters
 	}
 	return func(w http.ResponseWriter, r *http.Request) {
 		var input input
-		v := New()
+		v := validator.New()
 		qs := r.URL.Query()
 		input.Name = s.readString(qs, "name", "")
 		input.Jobtitles = s.readCSV(qs, "titles", []string{})
@@ -69,11 +74,11 @@ func (s *ApiServer) handleGetResources() http.HandlerFunc {
 		input.Filters.PageSize = s.readInt(qs, "pagesize", 20, v)
 		input.Filters.Sort = s.readString(qs, "sort", "id")
 		input.Filters.SortSafelist = []string{"id", "name", "-id", "-name"}
-		if ValidateFilters(v, input.Filters); !v.Valid() {
+		if data.ValidateFilters(v, input.Filters); !v.Valid() {
 			s.failedValidation(w, r, http.StatusBadRequest, v.Errors)
 			return
 		}
-		resources, metadata, err := s.svc.getResources(input.Name, input.Jobtitles, input.Types, input.Workgroups, input.Locations, input.Managers, input.Filters)
+		resources, metadata, err := s.svc.GetResources(input.Name, input.Jobtitles, input.Types, input.Workgroups, input.Locations, input.Managers, input.Filters)
 		if err != nil {
 			// TODO: Amend to check for ErrNoRows in case there are not rows in the resources table
 			s.errorJSON(w, err, http.StatusInternalServerError)
@@ -88,13 +93,13 @@ func (s *ApiServer) handleGetResources() http.HandlerFunc {
 
 func (s *ApiServer) handleUpdateResource() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var resource Resource
+		var resource data.Resource
 		err := s.readJSON(w, r, &resource)
 		if err != nil {
 			s.errorJSON(w, err, http.StatusBadRequest)
 			return
 		}
-		err = s.svc.updateResource(&resource)
+		err = s.svc.UpdateResource(&resource)
 		if err != nil {
 			s.errorJSON(w, err, http.StatusInternalServerError)
 			return

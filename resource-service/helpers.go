@@ -11,6 +11,7 @@ import (
 	"strings"
 
 	"github.com/julienschmidt/httprouter"
+	"github.com/petstacey/validator"
 )
 
 type envelope map[string]any
@@ -47,7 +48,7 @@ func (a *ApiServer) readCSV(qs url.Values, key string, defaultValue []string) []
 	return strings.Split(csv, ",")
 }
 
-func (a *ApiServer) readInt(qs url.Values, key string, defaultValue int, v *Validator) int {
+func (a *ApiServer) readInt(qs url.Values, key string, defaultValue int, v *validator.Validator) int {
 	str := qs.Get(key)
 	if str == "" {
 		return defaultValue

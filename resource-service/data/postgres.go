@@ -1,4 +1,4 @@
-package main
+package data
 
 import (
 	"context"
@@ -23,7 +23,7 @@ func NewPostgresRepository(db *sql.DB) *PostgresRepository {
 	}
 }
 
-func (r *PostgresRepository) createResource(resource *Resource) error {
+func (r *PostgresRepository) CreateResource(resource *Resource) error {
 	query := `INSERT INTO resources
 			  (id, name, email, type_id, job_title_id, workgroup_id, location_id, manager_id)
 			  VALUES ($1, $2, $3,
@@ -46,10 +46,9 @@ func (r *PostgresRepository) createResource(resource *Resource) error {
 		resource.Manager,
 	}
 	return r.DB.QueryRowContext(ctx, query, args...).Scan(&resource.Active)
-
 }
 
-func (r *PostgresRepository) getResource(id int64) (*Resource, error) {
+func (r *PostgresRepository) GetResource(id int64) (*Resource, error) {
 	query := `SELECT r.id, r.name, r.email, typ.type, j.title, w.name, l.name, m.name, r.active
 	          FROM resources r
 			  	JOIN employment_types typ ON (typ.id = r.type_id)
@@ -78,7 +77,7 @@ func (r *PostgresRepository) getResource(id int64) (*Resource, error) {
 	return &res, nil
 }
 
-func (r *PostgresRepository) getResources(name string, titles, types, workgroups, locations, managers []string, filters Filters) ([]*Resource, Metadata, error) {
+func (r *PostgresRepository) GetResources(name string, titles, types, workgroups, locations, managers []string, filters Filters) ([]*Resource, Metadata, error) {
 	query := fmt.Sprintf(`
         SELECT count(*) OVER(), r.id, r.name, r.email, typ.type, t.title, w.name, l.name, m.name AS manager, r.active
         FROM (((((resources r
@@ -95,14 +94,6 @@ func (r *PostgresRepository) getResources(name string, titles, types, workgroups
         AND (m.name = ANY($6) OR $6 = '{}')
         ORDER BY %s %s, r.id ASC
         LIMIT $7 OFFSET $8`, fmt.Sprintf("r.%s", filters.sortColumn()), filters.sortDirection())
-
-	// query := `SELECT r.id, r.name, r.email, typ.type, j.title, w.name, l.name, m.name, r.active
-	// 		  FROM resources r
-	// 		    JOIN employment_types typ ON (typ.id = r.type_id)
-	// 		    JOIN job_titles j ON (j.id = r.job_title_id)
-	// 		    JOIN workgroups w ON ( w.id = r.workgroup_id)
-	// 		    JOIN locations l ON ( l.id = r.location_id)
-	// 		    JOIN resources m ON ( m.id = r.manager_id)`
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 	args := []interface{}{
@@ -145,7 +136,7 @@ func (r *PostgresRepository) getResources(name string, titles, types, workgroups
 	return resources, metadata, nil
 }
 
-func (r *PostgresRepository) updateResource(resource *Resource) error {
+func (r *PostgresRepository) UpdateResource(resource *Resource) error {
 	query := `UPDATE resources 
 	          SET name = $1, email = $2,
 	          type_id = (SELECT typ.id FROM employment_types typ WHERE type = $3),

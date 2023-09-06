@@ -1,4 +1,4 @@
-package main
+package data
 
 import "errors"
 
@@ -18,7 +18,7 @@ func NewInMemoryResourceService() *InMemoryResourceService {
 	}
 }
 
-func (s *InMemoryResourceService) createResource(resource *Resource) error {
+func (s *InMemoryResourceService) CreateResource(resource *Resource) error {
 	for _, res := range s.Resources {
 		if res.ID == resource.ID {
 			return errors.New("duplicate entry")
@@ -28,7 +28,7 @@ func (s *InMemoryResourceService) createResource(resource *Resource) error {
 	return nil
 }
 
-func (s *InMemoryResourceService) getResource(id int64) (*Resource, error) {
+func (s *InMemoryResourceService) GetResource(id int64) (*Resource, error) {
 	for _, res := range s.Resources {
 		if res.ID == id {
 			return res, nil
@@ -37,10 +37,10 @@ func (s *InMemoryResourceService) getResource(id int64) (*Resource, error) {
 	return nil, errors.New("resource does not exist")
 }
 
-func (s *InMemoryResourceService) getResources(name string, titles, types, workgroups, locations, managers []string, filters Filters) ([]*Resource, Metadata, error) {
+func (s *InMemoryResourceService) GetResources(name string, titles, types, workgroups, locations, managers []string, filters Filters) ([]*Resource, Metadata, error) {
 	return s.Resources, Metadata{}, nil
 }
 
-func (s *InMemoryResourceService) updateResource(resource *Resource) error {
+func (s *InMemoryResourceService) UpdateResource(resource *Resource) error {
 	return nil
 }

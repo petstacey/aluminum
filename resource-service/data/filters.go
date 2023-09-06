@@ -1,8 +1,10 @@
-package main
+package data
 
 import (
 	"math"
 	"strings"
+
+	"github.com/petstacey/validator"
 )
 
 type Filters struct {
@@ -20,12 +22,12 @@ type Metadata struct {
 	TotalRecords int `json:"totalRecords,omitempty"`
 }
 
-func ValidateFilters(v *Validator, f Filters) {
+func ValidateFilters(v *validator.Validator, f Filters) {
 	v.Check(f.Page > 0, "page", "must be a positive integer")
 	v.Check(f.Page <= 10000000, "page", "must be less than 10 million")
 	v.Check(f.PageSize > 0, "pageSize", "must be a positive integer")
 	v.Check(f.PageSize <= 100, "pageSize", "must be a maximum of 100")
-	v.Check(PermittedValue(f.Sort, f.SortSafelist...), "sort", "invalid sort value")
+	v.Check(validator.PermittedValue(f.Sort, f.SortSafelist...), "sort", "invalid sort value")
 }
 
 func calculateMetadata(totalRecords, page, pageSize int) Metadata {

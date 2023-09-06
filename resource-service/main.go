@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/julienschmidt/httprouter"
+	"github.com/petstacey/aluminum/resource-service/data"
 
 	_ "github.com/jackc/pgconn"
 	_ "github.com/jackc/pgx/v4"
@@ -19,30 +20,9 @@ const (
 
 func main() {
 	db := connectToDB()
-	repo := NewPostgresRepository(db)
+	repo := data.NewPostgresRepository(db)
 	svc := NewService(repo)
 	svc = NewLoggingService(svc)
-	// resource := Resource{
-	// 	ID:        234567,
-	// 	Name:      "Jill Doe",
-	// 	Email:     "jill@doe.com",
-	// 	Type:      "Full time",
-	// 	JobTitle:  "Senior Manager",
-	// 	Workgroup: "Managers and Non-billable - ANZ",
-	// 	Location:  "ACT",
-	// 	Manager:   "Jane Doe",
-	// }
-	// err := svc.createResource(&resource)
-	// if err != nil {
-	// 	fmt.Printf("%s\n", err)
-	// }
-	// resources, _, err := svc.getResources("", []string{}, []string{}, []string{}, []string{}, []string{}, Filters{Page: 1, PageSize: 20, Sort: "id", SortSafelist: []string{"id"}})
-	// if err != nil {
-	// 	fmt.Printf("%s\n", err)
-	// }
-	// for _, resource := range resources {
-	// 	fmt.Printf("%d: %s\n", resource.ID, resource.Name)
-	// }
 	api := NewApiServer(svc)
 	rtr := httprouter.New()
 	rtr.HandlerFunc(http.MethodPost, "/v1/resources", api.handleCreateResource())
