@@ -80,7 +80,7 @@ func (r *PostgresRepository) getResource(id int64) (*Resource, error) {
 
 func (r *PostgresRepository) getResources(name string, titles, types, workgroups, locations, managers []string, filters Filters) ([]*Resource, Metadata, error) {
 	query := fmt.Sprintf(`
-        SELECT count(*) OVER(), r.id, r.name, r.email, t.title, typ.type, w.name, l.name, m.name AS manager, r.active
+        SELECT count(*) OVER(), r.id, r.name, r.email, typ.type, t.title, w.name, l.name, m.name AS manager, r.active
         FROM (((((resources r
             JOIN job_titles t ON r.job_title_id = t.id)
 			JOIN employment_types typ ON r.type_id = typ.id)
