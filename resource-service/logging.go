@@ -11,6 +11,12 @@ type LoggingService struct {
 	next Service
 }
 
+func NewLoggingService(next Service) Service {
+	return &LoggingService{
+		next: next,
+	}
+}
+
 // createResource implements Service.
 func (s *LoggingService) CreateResource(resource *data.Resource) (err error) {
 	defer func(start time.Time) {
@@ -41,10 +47,4 @@ func (s *LoggingService) UpdateResource(resource *data.Resource) (err error) {
 		fmt.Printf("update resources: %v, err: %s, took: %v\n", resource, err, time.Since(start))
 	}(time.Now())
 	return s.next.UpdateResource(resource)
-}
-
-func NewLoggingService(next Service) Service {
-	return &LoggingService{
-		next: next,
-	}
 }

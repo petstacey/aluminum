@@ -1,2 +1,5 @@
 resource-service/bin
 resource-service/scripts/json
+
+project-service/bin
+project-service/scripts/json

@@ -2,6 +2,9 @@
 	"folders": [
 		{
 			"path": "resource-service"
+		},
+		{
+			"path": "project-service"
 		}
 	]
 }
